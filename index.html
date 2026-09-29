@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>小步 Xiǎobù – Learn Chinese</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <div class="top">
+    <h1><span class="hz">小步</span> Xiǎobù</h1>
+    <label class="speed">Speed <input id="rate" type="range" min="0.5" max="1.1" step="0.1" value="0.8" aria-label="Speech speed"></label>
+  </div>
+  <div class="stats">
+    <b id="lv">Level 1</b>
+    <div class="bar" aria-hidden="true"><i id="xpbar"></i></div>
+    <span id="xptxt">0 XP</span>
+    <span id="streak">🔥 0</span>
+  </div>
+  <nav>
+    <button data-tab="learn">Learn</button>
+    <button data-tab="talk">Talk</button>
+    <button data-tab="quiz">Quiz</button>
+    <button data-tab="words">My words</button>
+  </nav>
+</header>
+<p id="novoice" hidden>No Chinese voice found. Install a Chinese (Mandarin) voice in your device's speech settings, or try Chrome, Edge or Safari.</p>
+<main id="main"></main>
+<div id="toast" role="status"></div>
+<script src="app.js"></script>
+</body>
+</html>
