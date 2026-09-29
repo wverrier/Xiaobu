@@ -12,7 +12,8 @@ const DIALOGS = [
 const QUESTS = [
  {k:'listen',n:10,xp:20,t:'Listen to 10 words or sentences'},
  {k:'quiz',n:5,xp:30,t:'Get 5 quiz answers right'},
- {k:'lesson',n:1,xp:40,t:'Finish a lesson'}
+ {k:'lesson',n:1,xp:40,t:'Finish a lesson'},
+ {k:'speak',n:3,xp:30,t:'Say 3 words correctly out loud'}
 ];
 
 /* ---------- state ---------- */
@@ -25,6 +26,7 @@ try { Object.assign(S, JSON.parse(localStorage.getItem('xiaobu') || '{}')); } ca
 const save = () => { try { localStorage.setItem('xiaobu', JSON.stringify(S)); } catch (e) {} };
 if (S.day !== today()) { S.day = today(); S.q = {listen:0,quiz:0,lesson:0}; S.paid = []; }
 
+S.q = Object.assign({listen:0,quiz:0,lesson:0,speak:0}, S.q);
 const MAP = {};
 LESSONS.forEach(l => l.w.forEach(w => MAP[w[0]] = w));
 DIALOGS.forEach(d => d.l.forEach(w => MAP[w[0]] = w));
@@ -118,6 +120,7 @@ ${c.picked !== null ? `<div class="row"><button class="btn" data-act="next">${qu
 }
 
 /* ---------- render ---------- */
+const VIEWS = {learn: vLearn, talk: vTalk, quiz: vQuiz, words: vWords};
 function render() {
   const lv = Math.floor(S.xp / 100) + 1, alive = S.last === today() || S.last === yest();
   $('#lv').textContent = 'Level ' + lv;
@@ -125,7 +128,7 @@ function render() {
   $('#xptxt').textContent = S.xp % 100 + '/100 XP';
   $('#streak').textContent = '🔥 ' + (alive ? S.streak : 0);
   document.querySelectorAll('nav button').forEach(b => b.classList.toggle('on', b.dataset.tab === tab));
-  $('#main').innerHTML = {learn: vLearn, talk: vTalk, quiz: vQuiz, words: vWords}[tab]();
+  $('#main').innerHTML = VIEWS[tab]();
 }
 
 /* ---------- events ---------- */
@@ -133,6 +136,7 @@ document.addEventListener('click', async e => {
   const b = e.target.closest('[data-say],[data-star],[data-tab],[data-act]');
   if (!b) return;
   const d = b.dataset;
+  if (/^(sp|rp)-/.test(d.act || '')) return; // handled in practice.js
   if (d.say) { run++; say(d.say); render(); return; }
   if (d.star) {
     const i = S.bank.indexOf(d.star);
